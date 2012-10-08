@@ -1,5 +1,14 @@
-#require 'rspec'
-#require 'rspec/expectations'
+#=============================================================================
+#
+# Copyright © 2012 Lawrence Leonard Gilbert
+#
+# This software is governed by the terms of the MIT License.  Please see the
+# 'LICENSE' file included in this distribution, or if it has been lost, please
+# see the license text at: http://opensource.org/licenses/MIT
+#
+#=============================================================================
+# File: spec/fubar_spec.rb
+#=============================================================================
 
 require 'fubar'
 require_relative '../rubar_config'
