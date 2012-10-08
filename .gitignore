@@ -16,3 +16,7 @@ tmp
 .yardoc
 _yardoc
 doc/
+
+# rubar
+Gemfile.lock
+rubar_config.rb

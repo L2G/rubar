@@ -1,0 +1,4 @@
+require "configatron"
+
+configatron.fubar.login    = "YOUR LOGIN HERE"
+configatron.fubar.password = "YOUR PASSWORD HERE"
