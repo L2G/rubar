@@ -61,4 +61,48 @@ describe "Fubar" do
         end
     end
 
+    context "#find_member" do
+        before(:all) do
+            @fubar = Fubar.new
+        end
+
+        it "raises exception if means of finding is unknown" do
+            lambda {
+                @fubar.find_member(:fnord => true)
+            }.should raise_exception
+        end
+
+        context "by ID" do
+            before(:all) do
+                @babyjesus = @fubar.find_member(id: 1)
+            end
+
+            it "should raise exception for an invalid ID" do
+                lambda {
+                    @fubar.find_member(id: 2434334874)
+                    }.should raise_exception(Fubar::NoSuchMember)
+            end
+
+            it "should return a Fubar::Member for a valid ID" do
+                @babyjesus.should be_an_instance_of(Fubar::Member)
+            end
+
+            it "should have the correct ID for the member" do
+                @babyjesus.id.should == 1
+            end
+
+            it "should have the correct URL for the member" do
+                @babyjesus.url.should == 'http://fubar.com/babyjesus'
+            end
+
+            it "should have the correct name for the member" do
+                @babyjesus.name.should == 'babyjesus'
+            end
+
+        end
+
+        after(:all) do
+            @fubar.browser.quit
+        end
+    end
 end

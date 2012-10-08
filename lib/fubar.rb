@@ -19,6 +19,7 @@ class Fubar
 
     # exceptions
     class IAmLost < Exception; end
+    class NoSuchMember < Exception; end
 
     attr_accessor :browser, :login, :password
     private :password
@@ -30,6 +31,53 @@ class Fubar
         @password  = args[:password]
         @logged_in = false
         log_in_user if @login and @password
+    end
+
+    def find_member(args = {})
+        unless args.keys.size == 1
+            raise "Don't know what to do with #{args}"
+        end
+        (how, value) = *(args.reduce)
+
+        case how
+        when :id
+            find_member_by_id(value)
+        else
+            raise "Don't know how to find by #{how}"
+        end
+
+    end
+
+    def find_member_by_id(value)
+        was_found = false
+        name = nil
+
+        raise "ID must be numeric but was #{value}" unless
+            value.kind_of?(Integer)
+        browser.goto("http://fubar.com/#{value}")
+        begin
+            Watir::Wait.until {
+                if browser.text =~ %r{invalid member}
+                    raise NoSuchMember
+                elsif ( browser.url == "http://fubar.com/#{value}" or
+                     browser.title =~ %r{^(.*?) / (.*?) \(#{value}\)} )
+                    was_found = true
+                    match_results = %r{^(.*?) / (.*?) \(}.match(browser.title)
+                    name = match_results[1]
+                end
+            }
+        #rescue Exception => exception
+        #    $stderr.puts exception.inspect
+        end
+        if was_found
+            Fubar::Member.new(
+                id: value,
+                url: browser.url,
+                name: name
+            )
+        else
+            nil
+        end
     end
 
     def log_in_user
